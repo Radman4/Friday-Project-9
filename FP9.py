@@ -4,6 +4,7 @@ from tkinter import ttk
 import openai
 from dotenv import load_dotenv
 import os
+load_dotenv()
 apikey = os.getenv("key")
 #setup openai (will need to purchase tokens, i think)
 openai.api_key = apikey
@@ -31,11 +32,11 @@ class prompt:
             # writing to chat GPT to tell it that it should input the prompt
             response = openai.responses.create(
                 model="gpt-4.1",  
-                messages=[
+                input=[
                     {"role": "system", "content": "You are a assistant, willing to answer without fail"},
                     {"role": "user", "content": self.prompt.get()},])
         # Extract ChatGPT's response
-            answer = response.choices[0].message.content.strip()
+            answer = response.output_text 
         except Exception as e:
             answer = f"An error occurred: {e}"
 
