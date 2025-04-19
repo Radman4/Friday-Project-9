@@ -11,6 +11,7 @@ root = Tk()
 
 class prompt:
     def __init__(self, master):
+        self.master = master
         frame1 = ttk.Frame(master, height = 200, width=300)
         frame1.pack(padx=10, pady=10)
     #textbox for the prompt
@@ -24,24 +25,22 @@ class prompt:
         #now to get ChatGPT to actually use the prompt!
     def promptAnswer(self):
             #  new window for output
-        outputText = ttk.Frame(outputWindow, height=15, width=60)
+        outputText = ttk.Frame(self.master, height=15, width=60)
         outputText.pack(padx=10, pady=10)
-        outputWindow = ttk.Label(outputText, answer)
-
         try:
-            # writing to chat GPT to tell it that  
-            response = openai.ChatCompletion.create(
+            # writing to chat GPT to tell it that it should input the prompt
+            response = openai.responses.create(
                 model="gpt-4.1",  
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": prompt},])
+                    {"role": "system", "content": "You are a assistant, willing to answer without fail"},
+                    {"role": "user", "content": self.prompt.get()},])
         # Extract ChatGPT's response
             answer = response.choices[0].message.content.strip()
         except Exception as e:
             answer = f"An error occurred: {e}"
 
-
-    
+        outputWindow = ttk.Label(outputText,text=answer )
+        outputWindow.pack()
 
 app = prompt(root)
 root.mainloop()
